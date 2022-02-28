@@ -1,6 +1,7 @@
 # blank_project_repository
 
 Look here for strength of schedule stats: https://www.teamrankings.com/ncaa-basketball/ranking/schedule-strength-by-other
+Vegas Odds https://www.oddsshark.com/ncaab/college-basketball-national-championship-odds
 
 ## High-level folders
 
