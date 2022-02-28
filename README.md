@@ -1,6 +1,6 @@
 # blank_project_repository
 
-A blank project repository for folder structure and naming guidance.  The `confidentiality_agreement.md` can be posted as an issue and each student in the repository must sign it after getting access or their access will be removed.
+Look here for strength of schedule stats: https://www.teamrankings.com/ncaa-basketball/ranking/schedule-strength-by-other
 
 ## High-level folders
 
