@@ -1,33 +1,37 @@
 match_predicter <- function(team1, team2){
   
-  # load libraries
-  library(tidyverse)
+  power_rankings <- read_csv("https://github.com/aarontmo/march-madness-model/raw/master/power_rankings.csv")
+  team_acry <- read_csv("https://github.com/aarontmo/march-madness-model/raw/master/team_acry.csv")
+  acry <- team_acry %>% 
+    pull(Abbreviation)
   
-  # load data
-  reg_season <- read_csv("https://github.com/aarontmo/march-madness-model/raw/master/raw_data/cbb.csv")
-  # write web scrape in separate script to get these, links on github
+  # normalize all data between 0-1, good = 1
+  dat_clean <- power_rankings %>% 
+    mutate(bpi = 1 - (`BPI RK` - min(`BPI RK`))/(max(`BPI RK`) - min(`BPI RK`)),
+           sos = 1 - (`SOS RK` - min(`SOS RK`))/(max(`SOS RK`) - min(`SOS RK`)),
+           sor = 1 - (`SOR RK` - min(`SOR RK`))/(max(`SOR RK`) - min(`SOR RK`))) %>% 
+    select(TEAM, bpi, sos, sor) %>% 
+    pivot_longer(cols = c(bpi, sos, sor), names_to = "metric") %>% 
+    group_by(TEAM) %>% 
+    # make this a weighted mean
+    summarise(magic_number = mean(value)) %>% 
+    str_replace("[:upper:]", "")
+    
+  teams <- dat_clean %>% 
+    select(TEAM) %>% 
+    filter(TEAM %in% c(team1, team2)) %>% 
+    pull(TEAM)
   
-  schedule_strength <- read_csv("https://github.com/aarontmo/march-madness-model/raw/master/schedule_strength.csv")
-  # just use odds to win championship
-  #
+  probs <- dat_clean %>% 
+    select(magic_number, TEAM) %>% 
+    filter(TEAM %in% teams) %>% 
+    pull(magic_number)
   
-  bracket_predictions <- read_csv("https://github.com/aarontmo/march-madness-model/raw/master/bracket_predictions.csv")
-  
+  sample(teams, 1, prob = probs)
   
   
   # make a round column, and 1/0 win column
   
-  ex_reg_season <- reg_season %>% 
-    select(POSTSEASON, YEAR, WAB) %>% 
-    mutate(wab_normal = (WAB - min(WAB))/(max(WAB) - min(WAB)))
+
 }
 
-
-
-
-dat <- seq(1,16)
-
-norm <- 1 - (dat - min(dat))/(max(dat) - min(dat))
-
-
-sample(c(0,1), 1, prob = c(0.94, 0.72))
